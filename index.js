@@ -1,12 +1,18 @@
-const Person = require('./person');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 
-console.log("hello world");
+const server = http.createServer((request, response) => {
+    if (request.url === '/'){
+        fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
+            if (err) throw err;
+            response.writeHead(200, {'Content-Type': 'text/html' });
+            response.end(content); 
+        })
+    }
+});
 
-const person = require('./person');
+const PORT = process.env.PORT || 5000;
+//http://localhost:5000
 
-
-console.log(person.name)
-
-const person1 = new Person('Odwa Mtotso', 'First Year');
-
-person1.greeting();
+server.listen(PORT, () => console.log(`Server running at port ${PORT}`));
